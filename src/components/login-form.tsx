@@ -4,13 +4,13 @@ import { GalleryVerticalEnd } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useRouter } from "next/navigation"
+// import { useRouter } from "next/navigation"
 
 import { useForm } from "react-hook-form";
 
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 
 
 const formSchema = z.object({
@@ -34,7 +34,7 @@ export function LoginForm({
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
 
-  const router = useRouter()
+  // const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -45,15 +45,15 @@ export function LoginForm({
   });
   const {
     handleSubmit,
-    formState: { errors },
+    formState: {  },
     watch
   } = form
 
-  function login() {
-    //login logic
-    router.push("/dashboard")
+  // function login() {
+  //   //login logic
+  //   router.push("/dashboard")
 
-  }
+  // }
   const username = watch("username")
 
   function onSubmit(data: z.infer<typeof formSchema>) {
