@@ -4,13 +4,15 @@ import { GalleryVerticalEnd } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-// import { useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 
 import { useForm } from "react-hook-form";
 
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../../components/ui/form";
+import { authUser } from "@/constants/data";
+import { useState } from "react";
 
 
 const formSchema = z.object({
@@ -21,7 +23,9 @@ const formSchema = z.object({
   }),
   password: z.string().nonempty({
     message: "Password is not empty"
-  })
+  }),
+  gender: z.string().nonempty(),
+  phone: z.string().nonempty()
 })
 
 // type LoginRequest = {
@@ -34,13 +38,15 @@ export function LoginForm({
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
 
-  // const router = useRouter()
+   const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
-      password: ""
+      password: "",
+      gender:"",
+      phone: ""
     }
   });
   const {
@@ -56,7 +62,16 @@ export function LoginForm({
   // }
   const username = watch("username")
 
+
+  const [authMessage, setAuthMessage] = useState<string>()
   function onSubmit(data: z.infer<typeof formSchema>) {
+    const {username , password} = authUser
+
+    if (username === data.username && password == data.password){
+      router.replace("/dashboard/overview")
+    }else{
+      setAuthMessage ("Bad credentials")
+    }
     console.log("Data", data);
 
   }
@@ -76,6 +91,7 @@ export function LoginForm({
                 <span className="sr-only">Acme Inc.</span>
               </a>
               <h1 className="text-xl font-bold">Welcome {username} to Acme Inc.</h1>
+              <p className="text-red-500">{authMessage}</p>
               <div className="text-center text-sm">
                 Don&apos;t have an account?{" "}
                 <a href="#" className="underline underline-offset-4">
